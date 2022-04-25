@@ -59,7 +59,7 @@ def register_env(
     # We hope each environment can only be registered once. If a modified
     # environment need to be registered, please modify its ID accordingly.
     if env_id in gym.envs.registry.env_specs:
-        raise ValueError(
+        raise RuntimeError(
             f"Environment {env_id} already in gym.envs.registry.env_specs. "
             "If a modified environment needs to be registered again, "
             "please modify its ID accordingly."
