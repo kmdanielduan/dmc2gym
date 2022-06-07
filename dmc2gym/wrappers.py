@@ -107,7 +107,7 @@ class DMCWrapper(core.Env):
         self.reward_range = (-float("inf"), float("inf"))
 
         # true and normalized action spaces
-        self._true_action_space = _action_spec_to_box(self._env.action_spec(), np.float64)
+        self._true_action_space = _action_spec_to_box(self._env.action_spec(), np.float32)
         self._norm_action_space = spaces.Box(
             low=-1.0,
             high=1.0,
