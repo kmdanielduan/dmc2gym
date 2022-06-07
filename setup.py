@@ -1,5 +1,14 @@
 from setuptools import find_packages, setup
 
+TESTS_REQUIRE = [
+    "black",
+    "codespell",
+    "flake8",
+    "flake8-isort",
+    "pytest",
+    "pytype",
+]
+
 setup(
     name="dmc2gym",
     version="1.1.0",
@@ -12,4 +21,5 @@ setup(
         "gym",
         "dm_control",
     ],
+    tests_require=TESTS_REQUIRE,
 )

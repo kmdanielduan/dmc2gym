@@ -13,10 +13,10 @@ def _extract_min_max(s):
     assert s.dtype == np.float64 or s.dtype == np.float32
     dim = np.int(np.prod(s.shape))
     if type(s) == specs.Array:
-        bound = np.inf * np.ones(dim, dtype=np.float32)
+        bound = np.inf * np.ones(dim, dtype=np.float64)
         return -bound, bound
     elif type(s) == specs.BoundedArray:
-        zeros = np.zeros(dim, dtype=np.float32)
+        zeros = np.zeros(dim, dtype=np.float64)
         return s.minimum + zeros, s.maximum + zeros
 
 
@@ -107,7 +107,9 @@ class DMCWrapper(core.Env):
         self.reward_range = (-float("inf"), float("inf"))
 
         # true and normalized action spaces
-        self._true_action_space = _action_spec_to_box(self._env.action_spec(), np.float32)
+        self._true_action_space = _action_spec_to_box(
+            self._env.action_spec(), np.float64
+        )
         self._norm_action_space = spaces.Box(
             low=-1.0,
             high=1.0,
@@ -124,12 +126,12 @@ class DMCWrapper(core.Env):
         else:
             self._observation_space = _obs_spec_to_box(
                 self._env.observation_spec(),
-                np.float32,
+                np.float64,
             )
 
         self._state_space = _obs_spec_to_box(
             self._env.observation_spec(),
-            np.float32,
+            np.float64,
         )
 
         self.current_state = None
@@ -150,7 +152,7 @@ class DMCWrapper(core.Env):
         return obs
 
     def _convert_action(self, action):
-        action = action.astype(np.float32)
+        action = action.astype(np.float64)
         true_delta = self._true_action_space.high - self._true_action_space.low
         norm_delta = self._norm_action_space.high - self._norm_action_space.low
         action = (action - self._norm_action_space.low) / norm_delta
