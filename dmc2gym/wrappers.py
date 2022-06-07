@@ -9,14 +9,14 @@ from gym import core, spaces
 from gym.utils import seeding
 
 
-def _extract_min_max(s):
+def _extract_min_max(s, dtype):
     assert s.dtype == np.float64 or s.dtype == np.float32
     dim = np.int(np.prod(s.shape))
     if type(s) == specs.Array:
-        bound = np.inf * np.ones(dim, dtype=np.float64)
+        bound = np.inf * np.ones(dim, dtype=dtype)
         return -bound, bound
     elif type(s) == specs.BoundedArray:
-        zeros = np.zeros(dim, dtype=np.float64)
+        zeros = np.zeros(dim, dtype=dtype)
         return s.minimum + zeros, s.maximum + zeros
 
 
@@ -24,7 +24,7 @@ def _action_spec_to_box(
     spec: Union[specs.Array, specs.BoundedArray],
     dtype: np.dtype,
 ) -> spaces.Box:
-    low, high = _extract_min_max(spec)
+    low, high = _extract_min_max(spec, dtype)
     low, high = low.astype(dtype), high.astype(dtype)
     assert low.shape == high.shape
     return spaces.Box(low, high, dtype=dtype)
@@ -37,7 +37,7 @@ def _obs_spec_to_box(
     spec_values = spec.values()
     mins, maxs = [], []
     for s in spec_values:
-        mn, mx = _extract_min_max(s)
+        mn, mx = _extract_min_max(s, dtype)
         mins.append(mn)
         maxs.append(mx)
     low = np.concatenate(mins, axis=0).astype(dtype)
@@ -107,9 +107,7 @@ class DMCWrapper(core.Env):
         self.reward_range = (-float("inf"), float("inf"))
 
         # true and normalized action spaces
-        self._true_action_space = _action_spec_to_box(
-            self._env.action_spec(), np.float64
-        )
+        self._true_action_space = _action_spec_to_box(self._env.action_spec(), np.float64)
         self._norm_action_space = spaces.Box(
             low=-1.0,
             high=1.0,
