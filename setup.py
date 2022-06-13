@@ -1,11 +1,23 @@
+"""setup.py for dmc2gym"""
+
 from setuptools import find_packages, setup
 
 TESTS_REQUIRE = [
     "black",
+    "coverage",
+    "codecov",
     "codespell",
     "flake8",
+    "flake8-blind-except",
+    "flake8-builtins",
+    "flake8-commas",
+    "flake8-debugger",
+    "flake8-docstrings",
     "flake8-isort",
+    "flaky",
+    "isort",
     "pytest",
+    "pytest-xdist",
     "pytype",
 ]
 
@@ -21,5 +33,5 @@ setup(
         "gym",
         "dm_control",
     ],
-    tests_require=TESTS_REQUIRE,
+    extras_require={"test": TESTS_REQUIRE},
 )
